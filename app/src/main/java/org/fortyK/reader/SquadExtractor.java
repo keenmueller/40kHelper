@@ -10,6 +10,7 @@ import java.util.regex.Pattern;
 public class SquadExtractor {
     private final List<String> txtBoxes;
     private final static Pattern nameRegex = Pattern.compile("(?<=\\d{2,} PTS ).*");
+    private final static Pattern unitRegex = Pattern.compile("Unit[\\s\\S]*?(?=Ranged)");
 
     public SquadExtractor(List<String> txtBoxes)
     {
@@ -21,9 +22,15 @@ public class SquadExtractor {
         List<Squad> squads = new ArrayList<>();
         for (String txt : txtBoxes)
         {
+            //Find Squad Name
             Matcher nameMatcher = nameRegex.matcher(txt);
-            String name = nameMatcher.find() ? nameMatcher.group() : "";
+            String name = nameMatcher.find() ? nameMatcher.group() : "SQUAD NAME NOT FOUND";
             Squad squad = new Squad(name);
+
+            //Find Units with Stats
+
+
+
             squads.add(squad);
         }
         return squads;

@@ -36,7 +36,7 @@ public class Extractor {
         Matcher detachmentMatcher = detachmentRegex.matcher(cleanText);
         DetachmentExtractor detachmentExtractor = detachmentMatcher.find()
                 ? new DetachmentExtractor(detachmentMatcher.group())
-                : new DetachmentExtractor(""); //Will probably have this throw an error later or something, for now this is fine
+                : new DetachmentExtractor("DETACHMENT NAME NOT FOUND"); //Will probably have this throw an error later or something, for now this is fine
         army.setDetachment(detachmentExtractor.extractDetachment());
 
         //Extract Squad info
