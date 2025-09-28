@@ -5,7 +5,10 @@ package org.fortyK.runner;
 
 import org.fortyK.model.Army;
 import org.fortyK.model.Squad;
+import org.fortyK.model.Unit;
 import org.fortyK.reader.Extractor;
+
+import java.util.List;
 
 public class CLI {
 
@@ -14,10 +17,5 @@ public class CLI {
         Army bloodAngels = Extractor.loadArmy("Blood Angels", filepath);
 
         System.out.printf("Successfully loaded %s\n", bloodAngels.getArmyName());
-        System.out.println("Squad Names: ");
-        for (Squad squad : bloodAngels.getSquads())
-        {
-            System.out.println(squad.getName());
-        }
     }
 }
