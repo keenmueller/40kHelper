@@ -29,13 +29,20 @@ public class SquadExtractor {
             String name = nameMatcher.find() ? nameMatcher.group() : "SQUAD NAME NOT FOUND";
             Squad squad = new Squad(name);
 
-            //Find Models/Units with Stats
-            Matcher modelsMatcher = modelsRegex.matcher(txt);
+            //Extract Units
             Matcher unitsMatcher = unitsRegex.matcher(txt);
-            String modelsTxt = modelsMatcher.find() ? modelsMatcher.group() : "MODELS NOT FOUND";
             String unitsTxt = unitsMatcher.find() ? unitsMatcher.group() : "UNITS NOT FOUND";
-            UnitExtractor unitExtractor = new UnitExtractor(modelsTxt, unitsTxt);
+            UnitExtractor unitExtractor = new UnitExtractor(unitsTxt);
             squad.setUnits(unitExtractor.generateUnits());
+
+
+            //Extract Weapon info
+            //TODO
+
+            //Match Models to Unit and Weapons
+            Matcher modelsMatcher = modelsRegex.matcher(txt);
+            String modelsTxt = modelsMatcher.find() ? modelsMatcher.group() : "MODELS NOT FOUND";
+            //TODO
 
             squads.add(squad);
         }

@@ -11,13 +11,11 @@ public class Unit {
     private final int wounds;
     private final int leadership;
     private final int objectiveControl;
-    private final List<String> weaponOptions;
     private List<Weapon> weapons = new ArrayList<>();
 
     public Unit(Builder builder)
     {
         this.name = builder.name;
-        this.weaponOptions = builder.weaponOptions;
         this.movement = builder.movement;
         this.toughness = builder.toughness;
         this.save = builder.save;
@@ -28,10 +26,6 @@ public class Unit {
 
     public String getName() {
         return name;
-    }
-
-    public List<String> getWeaponOptions() {
-        return weaponOptions;
     }
 
     public int getMovement() {
@@ -74,7 +68,6 @@ public class Unit {
         private int wounds;
         private int leadership;
         private int objectiveControl;
-        private List<String> weaponOptions;
 
         public Builder name(String name) {
             this.name = name;
@@ -108,11 +101,6 @@ public class Unit {
 
         public Builder objectiveControl(int objectiveControl) {
             this.objectiveControl = objectiveControl;
-            return this;
-        }
-
-        public Builder weaponOptions(List<String> weaponOptions) {
-            this.weaponOptions = weaponOptions;
             return this;
         }
 

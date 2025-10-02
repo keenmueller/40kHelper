@@ -9,15 +9,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class UnitExtractor {
-    private final static Pattern multiplesRegex = Pattern.compile("\\d*?(?=x)");
-    private final static Pattern nameRegex = Pattern.compile("(?<=\\d{1,2}x\\s)(?:\\w+\\s)*(?=\\w+,)");
+    private final static Pattern multiplesRegex = Pattern.compile("(?<=\\(x)\\d+(?=\\))");
+    private final static Pattern nameRegex = Pattern.compile("^([a-zA-Z]+\\s)*");
     private final static Pattern unitStatRegex = Pattern.compile("(?<=\\D)(\\d+)(?=\\D|$)");
-    private final String modelsTxt;
     private final String unitsTxt;
 
-    public UnitExtractor(String modelsTxt, String unitsTxt)
+    public UnitExtractor(String unitsTxt)
     {
-        this.modelsTxt = modelsTxt;
         this.unitsTxt = unitsTxt;
     }
 
@@ -25,18 +23,8 @@ public class UnitExtractor {
     {
         List<Unit> units = new ArrayList<>();
 
-        //Pull Stats
-        String statLine = unitsTxt.substring(0, unitsTxt.indexOf("\n"));
-        Matcher statMatcher = unitStatRegex.matcher(statLine);
-        int movement = statMatcher.find() ? Integer.parseInt(statMatcher.group()) : -1;
-        int toughness = statMatcher.find() ? Integer.parseInt(statMatcher.group()) : -1;
-        int save = statMatcher.find() ? Integer.parseInt(statMatcher.group()) : -1;
-        int wounds = statMatcher.find() ? Integer.parseInt(statMatcher.group()) : -1;
-        int leadership = statMatcher.find() ? Integer.parseInt(statMatcher.group()) : -1;
-        int objectiveControl = statMatcher.find() ? Integer.parseInt(statMatcher.group()) : -1;
-
-
-        modelsTxt.lines().forEach(s -> {
+        //Pull Units
+        unitsTxt.lines().forEach(s -> {
             //Check if there are multiples for this unit
             Matcher multiplesMatcher = multiplesRegex.matcher(s);
             int mult = multiplesMatcher.find() ? Integer.parseInt(multiplesMatcher.group()) : 1;
@@ -45,8 +33,19 @@ public class UnitExtractor {
             Matcher nameMatcher = nameRegex.matcher(s);
             String name = nameMatcher.find() ? nameMatcher.group().trim() : "NAME NOT FOUND";
 
-            String trimmed = s.replaceAll("^.*?(?=\\w+,)", "");
+            //remove the multiplier from the string
+            String trimmed = s.replaceAll("\\(x\\d+\\)\\s*", "");
 
+            //Grab stats
+            Matcher statMatcher = unitStatRegex.matcher(trimmed);
+            int movement = statMatcher.find() ? Integer.parseInt(statMatcher.group()) : -1;
+            int toughness = statMatcher.find() ? Integer.parseInt(statMatcher.group()) : -1;
+            int save = statMatcher.find() ? Integer.parseInt(statMatcher.group()) : -1;
+            int wounds = statMatcher.find() ? Integer.parseInt(statMatcher.group()) : -1;
+            int leadership = statMatcher.find() ? Integer.parseInt(statMatcher.group()) : -1;
+            int objectiveControl = statMatcher.find() ? Integer.parseInt(statMatcher.group()) : -1;
+
+            //Create Unit
             Unit unit = new Unit.Builder()
                     .name(name)
                     .movement(movement)
@@ -55,11 +54,11 @@ public class UnitExtractor {
                     .wounds(wounds)
                     .leadership(leadership)
                     .objectiveControl(objectiveControl)
-                    .weaponOptions(Arrays.asList(trimmed.split(", ")))
                     .build();
-            if (mult > 1)
+
+            if (mult > 1) //Add 1 if multiple was blank
                 addMultiples(units, unit, mult);
-            else
+            else //And the number specified by mult
                 units.add(unit);
         });
 
