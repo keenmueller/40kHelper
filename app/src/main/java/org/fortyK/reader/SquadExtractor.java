@@ -2,6 +2,7 @@ package org.fortyK.reader;
 
 import org.fortyK.model.Squad;
 import org.fortyK.model.Unit;
+import org.fortyK.model.Weapon;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +13,8 @@ public class SquadExtractor {
     private final static Pattern nameRegex = Pattern.compile("(?<=\\d{2,} PTS ).*");
     private final static Pattern modelsRegex = Pattern.compile("(?<=Options\\s\n)[\\s\\S]*?(?=Unit)");
     private final static Pattern unitsRegex = Pattern.compile("(?<=OC\\s\n)[\\s\\S]*?(?=Ranged)");
+    private final static Pattern rangedWeaponsRegex = Pattern.compile("(?<=BS S AP D Keywords\\s\n)[\\s\\S]*?(?=Melee)");
+    private final static Pattern meleeWeaponsRegex = Pattern.compile("(?<=WS S AP D Keywords\\s\n)[\\s\\S]*?(?=Abilities)");
     private final List<String> txtBoxes;
 
     public SquadExtractor(List<String> txtBoxes)
@@ -35,9 +38,13 @@ public class SquadExtractor {
             UnitExtractor unitExtractor = new UnitExtractor(unitsTxt);
             squad.setUnits(unitExtractor.generateUnits());
 
-
             //Extract Weapon info
-            //TODO
+            Matcher rangedWeaponsMatcher = rangedWeaponsRegex.matcher(txt);
+            String rangedWeaponsTxt = rangedWeaponsMatcher.find() ? rangedWeaponsMatcher.group() : "RANGED WEAPONS NOT FOUND";
+            Matcher meleeWeaponsMatcher = meleeWeaponsRegex.matcher(txt);
+            String meleeWeaponsTxt = meleeWeaponsMatcher.find() ? meleeWeaponsMatcher.group() : "MELEE WEAPONS NOT FOUND";
+            WeaponExtractor weaponExtractor = new WeaponExtractor(rangedWeaponsTxt, meleeWeaponsTxt);
+            List<Weapon> weapons = weaponExtractor.generateWeapons();
 
             //Match Models to Unit and Weapons
             Matcher modelsMatcher = modelsRegex.matcher(txt);

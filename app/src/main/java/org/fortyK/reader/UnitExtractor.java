@@ -3,7 +3,6 @@ package org.fortyK.reader;
 import org.fortyK.model.Unit;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -46,7 +45,7 @@ public class UnitExtractor {
             int objectiveControl = statMatcher.find() ? Integer.parseInt(statMatcher.group()) : -1;
 
             //Create Unit
-            Unit unit = new Unit.Builder()
+            Unit unit = new Unit.UnitBuilder()
                     .name(name)
                     .movement(movement)
                     .toughness(toughness)
