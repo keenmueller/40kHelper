@@ -9,11 +9,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class WeaponExtractor {
-    private final static Pattern validatorRegex = Pattern.compile("^(^\\u27A4 )?([a-zA-Z\\-]+ )+(- [a-zA-Z]+ )?(\\(x\\d+\\) )?(Melee|\\d+\") D?\\d+ \\d+\\+ \\d+ (-\\d+|0) D?\\d+(\\+\\d+)? (-$|([a-zA-Z1-9\\-+ ],?)+$)");
+    private final static Pattern validatorRegex = Pattern.compile("^(^\\u27A4 )?([a-zA-Z\\-]+ )+(- [a-zA-Z]+ )?(\\(x\\d+\\) )?(Melee|\\d+\") D?\\d+ (\\d+\\+|N/A) \\d+ (-\\d+|0) D?\\d+(\\+\\d+)? (-$|([a-zA-Z1-9\\-+ ],?)+$)");
     private final static Pattern multiplesRegex = Pattern.compile("(?<=\\(x)\\d+(?=\\))");
     private final static Pattern nameRegex = Pattern.compile("^(^\\u27A4 )?([a-zA-Z\\-]+ )+(- [a-zA-Z]+ )*?(?=Melee|\\d+\")");
     private final static Pattern baseNameRegex = Pattern.compile("(?<=^\\u27A4 )([a-zA-Z\\-]+ )*?(?=- )");
-    private final static Pattern weaponStatRegex = Pattern.compile("(?<=\\D)Melee|(D?\\d+)(?=\\D|$)");
+    private final static Pattern weaponStatRegex = Pattern.compile("(?<=\\D)Melee|(D?\\d+)|(N/A)(?=\\D|$)");
     private final String rangedWeaponTxt;
     private final String meleeWeaponTxt;
 
@@ -110,9 +110,45 @@ public class WeaponExtractor {
         }
 
         //Resolve Problem Lines
-        if (!problemLines.isEmpty())
+        while (!problemLines.isEmpty())
         {
-            //TODO
+            /*
+            Looking through two of the pdfs, it looks like the keywords never go passed two lines of overflow, so I'm
+            just going to pretend like that will always be the case until proven otherwise. An out of index exception
+            is looming on the horizon.
+             */
+
+            /*
+            This looks wierd but when there is a line overflow, something that is supposed to look like this:
+            Twin Icarus Ironhail Heavy Stubber 36" 3 3+ 4 0 1 Anti-FLY 4+, Rapid Fire 3, Twin-linked
+
+            Ends up looking like this:
+            Anti-FLY 4+, Rapid Fire 3, Twin-
+            Twin Icarus Ironhail Heavy Stubber 36" 3 3+ 4 0 1
+            linked
+             */
+            StringBuilder sb = new StringBuilder();
+            sb.append(problemLines.get(1)).append(" ").append(problemLines.get(0)).append(problemLines.get(2));
+            String weaponTxt = sb.toString();
+
+            problemLines.remove(0);
+            problemLines.remove(0);
+            problemLines.remove(0);
+
+            //Check if there are multiples for this weapon
+            Matcher multiplesMatcher = multiplesRegex.matcher(weaponTxt);
+            int mult = multiplesMatcher.find() ? Integer.parseInt(multiplesMatcher.group()) : 1;
+
+            //remove the multiplier from the string
+            String trimmed = weaponTxt.replaceAll("\\(x\\d+\\)\\s*", "");
+
+            //Create Weapon
+            Weapon weapon = createWeapon(trimmed, isRanged);
+
+            if (mult > 1) //Add 1 if multiple was blank
+                addMultiples(weapons, weapon, mult);
+            else //And the number specified by mult
+                weapons.add(weapon);
         }
     }
 
@@ -126,13 +162,13 @@ public class WeaponExtractor {
         Matcher statMatcher = weaponStatRegex.matcher(input);
         String range = statMatcher.find() ? statMatcher.group() : "RANGE NOT FOUND";
         String attacks = statMatcher.find() ? statMatcher.group() : "ATTACKS NOT FOUND";
-        int weaponOrBalisticSkill = statMatcher.find() ? Integer.parseInt(statMatcher.group()) : -1;
+        String weaponOrBalisticSkill = statMatcher.find() ? statMatcher.group() : "WS/BS NOT FOUND";
         int strength = statMatcher.find() ? Integer.parseInt(statMatcher.group()) : -1;
         int armourPenetration = statMatcher.find() ? Integer.parseInt(statMatcher.group()) : -1;
         String damage = statMatcher.find() ? statMatcher.group() : "DAMAGE NOT FOUND";
 
         //Get Keywords
-        String keywordsString = input.replaceAll("^(^\\u27A4 )?([a-zA-Z\\-]+ )+(- [a-zA-Z]+ )?(\\(x\\d+\\) )?(Melee|\\d+\") D?\\d+ \\d+\\+ \\d+ (-\\d+|0) D?\\d+(\\+\\d+)? ","");
+        String keywordsString = input.replaceAll("^(^\\u27A4 )?([a-zA-Z\\-]+ )+(- [a-zA-Z]+ )?(\\(x\\d+\\) )?(Melee|\\d+\") D?\\d+ (\\d+\\+|N/A) \\d+ (-\\d+|0) D?\\d+(\\+\\d+)? ","");
         List<String> keywords = Arrays.asList(keywordsString.split(", "));
         if (keywords.size() == 1 && keywords.getFirst().equals("-"))
             keywords = null;

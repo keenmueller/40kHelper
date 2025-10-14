@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 public class Extractor {
 
     private static final Pattern detachmentRegex = Pattern.compile("DETACHMENT[\\s\\S]*?(?=\\d{2,} PTS)");
-    private static final Pattern squadRegex = Pattern.compile("(\\d{2,})\\sPTS[\\s\\S]*?(?=\\d{2,} PTS)");
+    private static final Pattern squadRegex = Pattern.compile("(\\d{2,})\\sPTS[\\s\\S]*?(?=(\\d{2,} PTS)|$)");
 
     public Extractor(){}
 

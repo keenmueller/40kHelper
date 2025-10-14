@@ -6,7 +6,7 @@ public class Weapon {
     private final String name;
     private final String range;
     private final String attacks;
-    private final int weaponOrBalisticSkill;
+    private final String weaponOrBalisticSkill;
     private final int strength;
     private final int armourPenetration; //Wow, what British spelling
     private final String damage;
@@ -38,7 +38,7 @@ public class Weapon {
         return attacks;
     }
 
-    public int getWeaponOrBalisticSkill() {
+    public String getWeaponOrBalisticSkill() {
         return weaponOrBalisticSkill;
     }
 
@@ -74,7 +74,7 @@ public class Weapon {
         private String name;
         private String range;
         private String attacks;
-        private int weaponOrBalisticSkill;
+        private String weaponOrBalisticSkill;
         private int strength;
         private int armourPenetration;
         private String damage;
@@ -96,7 +96,7 @@ public class Weapon {
             return this;
         }
 
-        public WeaponBuilder weaponOrBalisticSkill(int weaponOrBalisticSkill) {
+        public WeaponBuilder weaponOrBalisticSkill(String weaponOrBalisticSkill) {
             this.weaponOrBalisticSkill = weaponOrBalisticSkill;
             return this;
         }
