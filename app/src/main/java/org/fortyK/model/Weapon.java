@@ -12,7 +12,7 @@ public class Weapon {
     private final String damage;
     private final List<String> keywords; //I may change this from String to some Enum later, but that is a later me problem
     private final boolean isRanged;
-    private final Weapon altMode;
+    private List<Weapon> altModes;
 
     public Weapon(WeaponBuilder builder){
         this.name = builder.name;
@@ -24,7 +24,6 @@ public class Weapon {
         this.damage = builder.damage;
         this.keywords = builder.keywords;
         this.isRanged = builder.isRanged;
-        this.altMode = builder.altMode;
     }
 
     public String getName() {
@@ -63,6 +62,14 @@ public class Weapon {
         return isRanged;
     }
 
+    public List<Weapon> getAltModes() {
+        return altModes;
+    }
+
+    public void setAltModes(List<Weapon> altModes) {
+        this.altModes = altModes;
+    }
+
     public static class WeaponBuilder {
         private String name;
         private String range;
@@ -73,7 +80,6 @@ public class Weapon {
         private String damage;
         private List<String> keywords;
         private boolean isRanged;
-        private Weapon altMode;
 
         public WeaponBuilder name(String name) {
             this.name = name;
@@ -117,11 +123,6 @@ public class Weapon {
 
         public WeaponBuilder isRanged(boolean isRanged) {
             this.isRanged = isRanged;
-            return this;
-        }
-
-        public WeaponBuilder altMode(Weapon altMode) {
-            this.altMode = altMode;
             return this;
         }
 
