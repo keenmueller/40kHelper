@@ -89,7 +89,7 @@ public class WeaponExtractor {
             }
             weaponsWithAlt.removeAll(toRemove);
             base.setAltModes(altModes);
-            base.setShortName(matchName);
+            base.setShortName(matchName.trim());
 
             weapons.add(base);
         }

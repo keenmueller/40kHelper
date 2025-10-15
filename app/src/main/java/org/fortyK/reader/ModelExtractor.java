@@ -3,13 +3,12 @@ package org.fortyK.reader;
 import org.fortyK.model.Squad;
 import org.fortyK.model.Unit;
 import org.fortyK.model.Weapon;
+import org.fortyK.utilities.StringMatcher;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 public class ModelExtractor {
     private final static Pattern multiplesRegex = Pattern.compile("^\\d*?(?=x)");
@@ -48,22 +47,32 @@ public class ModelExtractor {
     private Unit matchUnitWithWeapons(String modelTxt, List<Unit> units, List<Weapon> weapons)
     {
         Unit unitToAdd = null;
+        String matchedNameRegex = null;
         for (Unit unit : units)
         {
+            //Direct Name Match
             if (modelTxt.matches("^" + unit.getName() + " [\\S\\s]*?(?=$)")) {
                 unitToAdd = unit;
+                matchedNameRegex = "^" + unit.getName();
+                break;
+            }
+
+            //Name but Plural
+            if (modelTxt.matches("^" + unit.getName() + "s [\\S\\s]*?(?=$)")) {
+                unitToAdd = unit;
+                matchedNameRegex = "^" + unit.getName() + "s";
                 break;
             }
         }
 
-        //Direct Name Match
-        String options = modelTxt.replaceAll("^" + unitToAdd.getName() + " ", "");
+
+        String options = modelTxt.replaceAll(matchedNameRegex + " ", "");
         String[] optionList = options.split(", ");
         List<Weapon> weaponsToEquip = new ArrayList<>();
         for (String option : optionList)
         {
             weapons.forEach(weapon -> {
-                if(option.equals(weapon.getName()) || option.equals(weapon.getShortName()))
+                if(option.equals(weapon.getName()) || option.equals(weapon.getShortName()) || StringMatcher.compareStringWithTolerance(option, weapon.getName(), 1))
                 {
                     weaponsToEquip.add(weapon);
                 }
