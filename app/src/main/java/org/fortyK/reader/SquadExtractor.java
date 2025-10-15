@@ -36,7 +36,7 @@ public class SquadExtractor {
             Matcher unitsMatcher = unitsRegex.matcher(txt);
             String unitsTxt = unitsMatcher.find() ? unitsMatcher.group() : "UNITS NOT FOUND";
             UnitExtractor unitExtractor = new UnitExtractor(unitsTxt);
-            squad.setUnits(unitExtractor.generateUnits());
+            List<Unit> units = unitExtractor.generateUnits();
 
             //Extract Weapon info
             Matcher rangedWeaponsMatcher = rangedWeaponsRegex.matcher(txt);
@@ -49,7 +49,8 @@ public class SquadExtractor {
             //Match Models to Unit and Weapons
             Matcher modelsMatcher = modelsRegex.matcher(txt);
             String modelsTxt = modelsMatcher.find() ? modelsMatcher.group() : "MODELS NOT FOUND";
-            //TODO
+            ModelExtractor modelExtractor = new ModelExtractor(modelsTxt);
+            modelExtractor.armUnits(squad, units, weapons);
 
             squads.add(squad);
         }

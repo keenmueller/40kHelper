@@ -10,7 +10,6 @@ import java.util.regex.Pattern;
 
 public class WeaponExtractor {
     private final static Pattern validatorRegex = Pattern.compile("^(^\\u27A4 )?([a-zA-Z\\-]+ )+(- [a-zA-Z]+ )?(\\(x\\d+\\) )?(Melee|\\d+\") D?\\d+ (\\d+\\+|N/A) \\d+ (-\\d+|0) D?\\d+(\\+\\d+)? (-$|([a-zA-Z1-9\\-+ ],?)+$)");
-    private final static Pattern multiplesRegex = Pattern.compile("(?<=\\(x)\\d+(?=\\))");
     private final static Pattern nameRegex = Pattern.compile("^(^\\u27A4 )?([a-zA-Z\\-]+ )+(- [a-zA-Z]+ )*?(?=Melee|\\d+\")");
     private final static Pattern baseNameRegex = Pattern.compile("(?<=^\\u27A4 )([a-zA-Z\\-]+ )*?(?=- )");
     private final static Pattern weaponStatRegex = Pattern.compile("(?<=\\D)Melee|(D?\\d+)|(N/A)(?=\\D|$)");
@@ -50,20 +49,12 @@ public class WeaponExtractor {
                 weaponsWithAlt.add(s);
 
             else{
-                //Check if there are multiples for this weapon
-                Matcher multiplesMatcher = multiplesRegex.matcher(s);
-                int mult = multiplesMatcher.find() ? Integer.parseInt(multiplesMatcher.group()) : 1;
-
                 //remove the multiplier from the string
                 String trimmed = s.replaceAll("\\(x\\d+\\)\\s*", "");
 
                 //Create Weapon
                 Weapon weapon = createWeapon(trimmed, isRanged);
-
-                if (mult > 1) //Add 1 if multiple was blank
-                    addMultiples(weapons, weapon, mult);
-                else //And the number specified by mult
-                    weapons.add(weapon);
+                weapons.add(weapon);
             }
         });
 
@@ -72,10 +63,6 @@ public class WeaponExtractor {
         {
             //Create base weapon
             String baseWeaponTxt = weaponsWithAlt.getFirst();
-
-            //Check if there are multiples for this weapon
-            Matcher multiplesMatcher = multiplesRegex.matcher(baseWeaponTxt);
-            int mult = multiplesMatcher.find() ? Integer.parseInt(multiplesMatcher.group()) : 1;
 
             //remove the multiplier from the string
             String trimmedBase = baseWeaponTxt.replaceAll("\\(x\\d+\\)\\s*", "");
@@ -102,11 +89,9 @@ public class WeaponExtractor {
             }
             weaponsWithAlt.removeAll(toRemove);
             base.setAltModes(altModes);
+            base.setShortName(matchName);
 
-            if (mult > 1) //Add 1 if multiple was blank
-                addMultiples(weapons, base, mult);
-            else //And the number specified by mult
-                weapons.add(base);
+            weapons.add(base);
         }
 
         //Resolve Problem Lines
@@ -135,20 +120,13 @@ public class WeaponExtractor {
             problemLines.remove(0);
             problemLines.remove(0);
 
-            //Check if there are multiples for this weapon
-            Matcher multiplesMatcher = multiplesRegex.matcher(weaponTxt);
-            int mult = multiplesMatcher.find() ? Integer.parseInt(multiplesMatcher.group()) : 1;
-
             //remove the multiplier from the string
             String trimmed = weaponTxt.replaceAll("\\(x\\d+\\)\\s*", "");
 
             //Create Weapon
             Weapon weapon = createWeapon(trimmed, isRanged);
 
-            if (mult > 1) //Add 1 if multiple was blank
-                addMultiples(weapons, weapon, mult);
-            else //And the number specified by mult
-                weapons.add(weapon);
+            weapons.add(weapon);
         }
     }
 
@@ -184,13 +162,5 @@ public class WeaponExtractor {
                 .keywords(keywords)
                 .isRanged(isRanged)
                 .build();
-    }
-
-    private void addMultiples(List<Weapon> weapons, Weapon weapon, int multiple)
-    {
-        for (int i = 0; i < multiple; i++)
-        {
-            weapons.add(weapon);
-        }
     }
 }

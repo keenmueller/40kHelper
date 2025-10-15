@@ -13,6 +13,7 @@ public class Weapon {
     private final List<String> keywords; //I may change this from String to some Enum later, but that is a later me problem
     private final boolean isRanged;
     private List<Weapon> altModes;
+    private String shortName; //Used if weapon has alt modes
 
     public Weapon(WeaponBuilder builder){
         this.name = builder.name;
@@ -68,6 +69,14 @@ public class Weapon {
 
     public void setAltModes(List<Weapon> altModes) {
         this.altModes = altModes;
+    }
+
+    public String getShortName() {
+        return shortName;
+    }
+
+    public void setShortName(String shortName) {
+        this.shortName = shortName;
     }
 
     public static class WeaponBuilder {

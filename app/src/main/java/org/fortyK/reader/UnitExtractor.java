@@ -8,7 +8,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class UnitExtractor {
-    private final static Pattern multiplesRegex = Pattern.compile("(?<=\\(x)\\d+(?=\\))");
     private final static Pattern nameRegex = Pattern.compile("^([a-zA-Z]+\\s)*");
     private final static Pattern unitStatRegex = Pattern.compile("(?<=\\D)(\\d+)(?=\\D|$)");
     private final String unitsTxt;
@@ -24,10 +23,6 @@ public class UnitExtractor {
 
         //Pull Units
         unitsTxt.lines().forEach(s -> {
-            //Check if there are multiples for this unit
-            Matcher multiplesMatcher = multiplesRegex.matcher(s);
-            int mult = multiplesMatcher.find() ? Integer.parseInt(multiplesMatcher.group()) : 1;
-
             //Pull name
             Matcher nameMatcher = nameRegex.matcher(s);
             String name = nameMatcher.find() ? nameMatcher.group().trim() : "NAME NOT FOUND";
@@ -55,20 +50,9 @@ public class UnitExtractor {
                     .objectiveControl(objectiveControl)
                     .build();
 
-            if (mult > 1) //Add 1 if multiple was blank
-                addMultiples(units, unit, mult);
-            else //And the number specified by mult
-                units.add(unit);
+            units.add(unit);
         });
 
         return units;
-    }
-
-    private void addMultiples(List<Unit> units, Unit unitToAdd, int multiple)
-    {
-        for (int i = 0; i < multiple; i++)
-        {
-            units.add(unitToAdd);
-        }
     }
 }
