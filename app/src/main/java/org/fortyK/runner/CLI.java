@@ -4,11 +4,7 @@
 package org.fortyK.runner;
 
 import org.fortyK.model.Army;
-import org.fortyK.model.Squad;
-import org.fortyK.model.Unit;
 import org.fortyK.reader.Extractor;
-
-import java.util.List;
 
 public class CLI {
 

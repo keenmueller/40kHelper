@@ -1,0 +1,142 @@
+package org.fortyK.model;
+
+import java.util.List;
+
+public class WeaponModel {
+    private final String name;
+    private final String range;
+    private final String attacks;
+    private final String weaponOrBalisticSkill;
+    private final int strength;
+    private final int armourPenetration; //Wow, what British spelling
+    private final String damage;
+    private final List<String> keywords; //I may change this from String to some Enum later, but that is a later me problem
+    private final boolean isRanged;
+    private List<WeaponModel> altModes;
+    private String shortName; //Used if weapon has alt modes
+
+    public WeaponModel(WeaponBuilder builder){
+        this.name = builder.name;
+        this.range = builder.range;
+        this.attacks = builder.attacks;
+        this.weaponOrBalisticSkill = builder.weaponOrBalisticSkill;
+        this.strength = builder.strength;
+        this.armourPenetration = builder.armourPenetration;
+        this.damage = builder.damage;
+        this.keywords = builder.keywords;
+        this.isRanged = builder.isRanged;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getRange() {
+        return range;
+    }
+
+    public String getAttacks() {
+        return attacks;
+    }
+
+    public String getWeaponOrBalisticSkill() {
+        return weaponOrBalisticSkill;
+    }
+
+    public int getStrength() {
+        return strength;
+    }
+
+    public int getArmourPenetration() {
+        return armourPenetration;
+    }
+
+    public String getDamage() {
+        return damage;
+    }
+
+    public List<String> getKeywords() {
+        return keywords;
+    }
+
+    public boolean isRanged() {
+        return isRanged;
+    }
+
+    public List<WeaponModel> getAltModes() {
+        return altModes;
+    }
+
+    public void setAltModes(List<WeaponModel> altModes) {
+        this.altModes = altModes;
+    }
+
+    public String getShortName() {
+        return shortName;
+    }
+
+    public void setShortName(String shortName) {
+        this.shortName = shortName;
+    }
+
+    public static class WeaponBuilder {
+        private String name;
+        private String range;
+        private String attacks;
+        private String weaponOrBalisticSkill;
+        private int strength;
+        private int armourPenetration;
+        private String damage;
+        private List<String> keywords;
+        private boolean isRanged;
+
+        public WeaponBuilder name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public WeaponBuilder range(String range) {
+            this.range = range;
+            return this;
+        }
+
+        public WeaponBuilder attacks(String attacks) {
+            this.attacks = attacks;
+            return this;
+        }
+
+        public WeaponBuilder weaponOrBalisticSkill(String weaponOrBalisticSkill) {
+            this.weaponOrBalisticSkill = weaponOrBalisticSkill;
+            return this;
+        }
+
+        public WeaponBuilder strength(int strength) {
+            this.strength = strength;
+            return this;
+        }
+
+        public WeaponBuilder armourPenetration(int armourPenetration) {
+            this.armourPenetration = armourPenetration;
+            return this;
+        }
+
+        public WeaponBuilder damage(String damage) {
+            this.damage = damage;
+            return this;
+        }
+
+        public WeaponBuilder keywords(List<String> keywords) {
+            this.keywords = keywords;
+            return this;
+        }
+
+        public WeaponBuilder isRanged(boolean isRanged) {
+            this.isRanged = isRanged;
+            return this;
+        }
+
+        public WeaponModel build(){
+            return new WeaponModel(this);
+        }
+    }
+}

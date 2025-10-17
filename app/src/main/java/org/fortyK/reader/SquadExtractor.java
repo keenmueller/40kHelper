@@ -1,8 +1,8 @@
 package org.fortyK.reader;
 
 import org.fortyK.model.Squad;
-import org.fortyK.model.Unit;
-import org.fortyK.model.Weapon;
+import org.fortyK.model.UnitModel;
+import org.fortyK.model.WeaponModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +36,7 @@ public class SquadExtractor {
             Matcher unitsMatcher = unitsRegex.matcher(txt);
             String unitsTxt = unitsMatcher.find() ? unitsMatcher.group() : "UNITS NOT FOUND";
             UnitExtractor unitExtractor = new UnitExtractor(unitsTxt);
-            List<Unit> units = unitExtractor.generateUnits();
+            List<UnitModel> unitModels = unitExtractor.generateUnits();
 
             //Extract Weapon info
             Matcher rangedWeaponsMatcher = rangedWeaponsRegex.matcher(txt);
@@ -44,13 +44,13 @@ public class SquadExtractor {
             Matcher meleeWeaponsMatcher = meleeWeaponsRegex.matcher(txt);
             String meleeWeaponsTxt = meleeWeaponsMatcher.find() ? meleeWeaponsMatcher.group() : "MELEE WEAPONS NOT FOUND";
             WeaponExtractor weaponExtractor = new WeaponExtractor(rangedWeaponsTxt, meleeWeaponsTxt);
-            List<Weapon> weapons = weaponExtractor.generateWeapons();
+            List<WeaponModel> weaponModels = weaponExtractor.generateWeapons();
 
             //Match Models to Unit and Weapons
             Matcher modelsMatcher = modelsRegex.matcher(txt);
             String modelsTxt = modelsMatcher.find() ? modelsMatcher.group() : "MODELS NOT FOUND";
             ModelExtractor modelExtractor = new ModelExtractor(modelsTxt);
-            modelExtractor.armUnits(squad, units, weapons);
+            modelExtractor.armUnits(squad, unitModels, weaponModels);
 
             squads.add(squad);
         }

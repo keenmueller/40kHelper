@@ -1,6 +1,6 @@
 package org.fortyK.reader;
 
-import org.fortyK.model.Weapon;
+import org.fortyK.model.WeaponModel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,20 +22,20 @@ public class WeaponExtractor {
         this.meleeWeaponTxt = meleeWeaponTxt;
     }
 
-    public List<Weapon> generateWeapons()
+    public List<WeaponModel> generateWeapons()
     {
-        List<Weapon> weapons = new ArrayList<>();
+        List<WeaponModel> weaponModels = new ArrayList<>();
 
         //Pull Ranged Weapons
-        pullWeapons(weapons, rangedWeaponTxt, true);
+        pullWeapons(weaponModels, rangedWeaponTxt, true);
 
         //Pull Melee Weapons
-        pullWeapons(weapons, meleeWeaponTxt, false);
+        pullWeapons(weaponModels, meleeWeaponTxt, false);
 
-        return weapons;
+        return weaponModels;
     }
 
-    private void pullWeapons(List<Weapon> weapons, String rawText, boolean isRanged){
+    private void pullWeapons(List<WeaponModel> weaponModels, String rawText, boolean isRanged){
         List<String> problemLines = new ArrayList<>();
         List<String> weaponsWithAlt = new ArrayList<>();
 
@@ -53,8 +53,8 @@ public class WeaponExtractor {
                 String trimmed = s.replaceAll("\\(x\\d+\\)\\s*", "");
 
                 //Create Weapon
-                Weapon weapon = createWeapon(trimmed, isRanged);
-                weapons.add(weapon);
+                WeaponModel weaponModel = createWeapon(trimmed, isRanged);
+                weaponModels.add(weaponModel);
             }
         });
 
@@ -68,11 +68,11 @@ public class WeaponExtractor {
             String trimmedBase = baseWeaponTxt.replaceAll("\\(x\\d+\\)\\s*", "");
 
             //Create base weapon and remove from list
-            Weapon base = createWeapon(trimmedBase, isRanged);
+            WeaponModel base = createWeapon(trimmedBase, isRanged);
             weaponsWithAlt.removeFirst();
 
             //Create Alt Weapons
-            List<Weapon> altModes = new ArrayList<>();
+            List<WeaponModel> altModes = new ArrayList<>();
             Matcher baseNameMatcher = baseNameRegex.matcher(baseWeaponTxt);
             String matchName = baseNameMatcher.find() ? baseNameMatcher.group() : "MATCH NAME NOT FOUND";
 
@@ -91,7 +91,7 @@ public class WeaponExtractor {
             base.setAltModes(altModes);
             base.setShortName(matchName.trim());
 
-            weapons.add(base);
+            weaponModels.add(base);
         }
 
         //Resolve Problem Lines
@@ -124,13 +124,13 @@ public class WeaponExtractor {
             String trimmed = weaponTxt.replaceAll("\\(x\\d+\\)\\s*", "");
 
             //Create Weapon
-            Weapon weapon = createWeapon(trimmed, isRanged);
+            WeaponModel weaponModel = createWeapon(trimmed, isRanged);
 
-            weapons.add(weapon);
+            weaponModels.add(weaponModel);
         }
     }
 
-    private Weapon createWeapon(String input, boolean isRanged)
+    private WeaponModel createWeapon(String input, boolean isRanged)
     {
         //Pull name
         Matcher nameMatcher = nameRegex.matcher(input);
@@ -151,7 +151,7 @@ public class WeaponExtractor {
         if (keywords.size() == 1 && keywords.getFirst().equals("-"))
             keywords = null;
 
-        return new Weapon.WeaponBuilder()
+        return new WeaponModel.WeaponBuilder()
                 .name(name)
                 .range(range)
                 .attacks(attacks)

@@ -1,6 +1,6 @@
 package org.fortyK.reader;
 
-import org.fortyK.model.Unit;
+import org.fortyK.model.UnitModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,9 +17,9 @@ public class UnitExtractor {
         this.unitsTxt = unitsTxt;
     }
 
-    public List<Unit> generateUnits()
+    public List<UnitModel> generateUnits()
     {
-        List<Unit> units = new ArrayList<>();
+        List<UnitModel> unitModels = new ArrayList<>();
 
         //Pull Units
         unitsTxt.lines().forEach(s -> {
@@ -40,7 +40,7 @@ public class UnitExtractor {
             int objectiveControl = statMatcher.find() ? Integer.parseInt(statMatcher.group()) : -1;
 
             //Create Unit
-            Unit unit = new Unit.UnitBuilder()
+            UnitModel unitModel = new UnitModel.UnitBuilder()
                     .name(name)
                     .movement(movement)
                     .toughness(toughness)
@@ -50,9 +50,9 @@ public class UnitExtractor {
                     .objectiveControl(objectiveControl)
                     .build();
 
-            units.add(unit);
+            unitModels.add(unitModel);
         });
 
-        return units;
+        return unitModels;
     }
 }

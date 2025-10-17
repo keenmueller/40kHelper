@@ -11,17 +11,18 @@ public class Unit {
     private final int wounds;
     private final int leadership;
     private final int objectiveControl;
-    private List<Weapon> weapons = new ArrayList<>();
+    private final List<Weapon> weapons;
 
-    public Unit(UnitBuilder builder)
+    public Unit(UnitModel unitModel)
     {
-        this.name = builder.name;
-        this.movement = builder.movement;
-        this.toughness = builder.toughness;
-        this.save = builder.save;
-        this.wounds = builder.wounds;
-        this.leadership = builder.leadership;
-        this.objectiveControl = builder.objectiveControl;
+        this.name = unitModel.getName();
+        this.movement = unitModel.getMovement();
+        this.toughness = unitModel.getToughness();
+        this.save = unitModel.getSave();
+        this.wounds = unitModel.getWounds();
+        this.leadership = unitModel.getLeadership();
+        this.objectiveControl = unitModel.getObjectiveControl();
+        this.weapons = generateWeaponsFromModel(unitModel);
     }
 
     public String getName() {
@@ -56,56 +57,11 @@ public class Unit {
         return weapons;
     }
 
-    public void setWeapons(List<Weapon> weapons) {
-        this.weapons = weapons;
-    }
-
-    public static class UnitBuilder {
-        private String name;
-        private int movement;
-        private int toughness;
-        private int save;
-        private int wounds;
-        private int leadership;
-        private int objectiveControl;
-
-        public UnitBuilder name(String name) {
-            this.name = name;
-            return this;
+    private List<Weapon> generateWeaponsFromModel(UnitModel model){
+        List<Weapon> weaponList = new ArrayList<>();
+        for (WeaponModel weaponModel : model.getWeapons()){
+            weaponList.add(new Weapon(weaponModel));
         }
-
-        public UnitBuilder movement(int movement) {
-            this.movement = movement;
-            return this;
-        }
-
-        public UnitBuilder toughness(int toughness) {
-            this.toughness = toughness;
-            return this;
-        }
-
-        public UnitBuilder save(int save) {
-            this.save = save;
-            return this;
-        }
-
-        public UnitBuilder wounds(int wounds) {
-            this.wounds = wounds;
-            return this;
-        }
-
-        public UnitBuilder leadership(int leadership) {
-            this.leadership = leadership;
-            return this;
-        }
-
-        public UnitBuilder objectiveControl(int objectiveControl) {
-            this.objectiveControl = objectiveControl;
-            return this;
-        }
-
-        public Unit build() {
-            return new Unit(this);
-        }
+        return weaponList;
     }
 }
