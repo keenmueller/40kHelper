@@ -30,8 +30,6 @@ public class Extractor {
         String cleanText = rawText
                 .replaceAll("\\s.*https[\\s\\S]*?Page \\d+ of \\d+\\s", "")
                 .replaceAll("Army Roster[\\s\\S]*","");
-//                .replaceAll("[^\\x00-\\x7F] ", "");
-        //Decided to maybe keep those characters since those normally dictate multiple options which I need to capture somehow
 
         //Extract Detachment info
         Matcher detachmentMatcher = detachmentRegex.matcher(cleanText);

@@ -98,12 +98,10 @@ public class WeaponExtractor {
         while (!problemLines.isEmpty())
         {
             /*
-            Looking through two of the pdfs, it looks like the keywords never go passed two lines of overflow, so I'm
+            Looking through two of the pdfs, it looks like the keywords never go higher than two lines of overflow, so I'm
             just going to pretend like that will always be the case until proven otherwise. An out of index exception
             is looming on the horizon.
-             */
 
-            /*
             This looks wierd but when there is a line overflow, something that is supposed to look like this:
             Twin Icarus Ironhail Heavy Stubber 36" 3 3+ 4 0 1 Anti-FLY 4+, Rapid Fire 3, Twin-linked
 

@@ -93,7 +93,7 @@ public class ModelExtractor {
 
             /*
             It would be nice if the model names were the same as the unit names, but nooooooooooooooooooooo. So here are
-            all the alternates, which there are a lot of.
+            all the alternates I've run into so far, which there are a lot of.
              */
 
             //Name but Plural
