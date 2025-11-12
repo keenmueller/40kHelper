@@ -4,13 +4,13 @@
 package org.fortyK.runner;
 
 import org.fortyK.model.Army;
-import org.fortyK.reader.Extractor;
+import org.fortyK.reader.ArmyExtractor;
 
 public class CLI {
 
     static void main(String[] args) {
         String filepath = "app/src/main/resources/BloodAngels2KPoint.pdf";
-        Army bloodAngels = Extractor.loadArmy("Blood Angels", filepath);
+        Army bloodAngels = ArmyExtractor.loadArmy("Blood Angels", filepath);
 
         System.out.printf("Successfully loaded %s\n", bloodAngels.getArmyName());
     }

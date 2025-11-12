@@ -4,7 +4,6 @@ import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.fortyK.model.Army;
-import org.fortyK.model.Squad;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,14 +11,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
-public class Extractor {
+public class ArmyExtractor {
 
     private static final Pattern detachmentRegex = Pattern.compile("DETACHMENT[\\s\\S]*?(?=\\d{2,} PTS)");
     private static final Pattern squadRegex = Pattern.compile("(\\d{2,})\\sPTS[\\s\\S]*?(?=(\\d{2,} PTS)|$)");
-
-    public Extractor(){}
 
     public static Army loadArmy(String armyName, String filepath)
     {
@@ -42,8 +38,7 @@ public class Extractor {
         Matcher squadMatcher = squadRegex.matcher(cleanText);
         List<String> squadTxtBoxes = new ArrayList<>();
         squadMatcher.results().forEach(mr -> squadTxtBoxes.add(mr.group()));
-        SquadExtractor squadExtractor = new SquadExtractor(squadTxtBoxes);
-        army.setSquads(squadExtractor.extractSquad());
+        army.setSquads(SquadExtractor.extractSquad(squadTxtBoxes));
 
         return army;
     }

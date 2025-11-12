@@ -13,16 +13,8 @@ public class WeaponExtractor {
     private final static Pattern nameRegex = Pattern.compile("^(^\\u27A4 )?([a-zA-Z\\-]+ )+(- [a-zA-Z]+ )*?(?=Melee|\\d+\")");
     private final static Pattern baseNameRegex = Pattern.compile("(?<=^\\u27A4 )([a-zA-Z\\-]+ )*?(?=- )");
     private final static Pattern weaponStatRegex = Pattern.compile("(?<=\\D)Melee|(D?\\d+)|(N/A)(?=\\D|$)");
-    private final String rangedWeaponTxt;
-    private final String meleeWeaponTxt;
 
-    public WeaponExtractor(String rangedWeaponTxt, String meleeWeaponTxt)
-    {
-        this.rangedWeaponTxt = rangedWeaponTxt;
-        this.meleeWeaponTxt = meleeWeaponTxt;
-    }
-
-    public List<WeaponModel> generateWeapons()
+    public static List<WeaponModel> generateWeapons(String rangedWeaponTxt, String meleeWeaponTxt)
     {
         List<WeaponModel> weaponModels = new ArrayList<>();
 
@@ -35,7 +27,7 @@ public class WeaponExtractor {
         return weaponModels;
     }
 
-    private void pullWeapons(List<WeaponModel> weaponModels, String rawText, boolean isRanged){
+    private static void pullWeapons(List<WeaponModel> weaponModels, String rawText, boolean isRanged){
         List<String> problemLines = new ArrayList<>();
         List<String> weaponsWithAlt = new ArrayList<>();
 
@@ -128,7 +120,7 @@ public class WeaponExtractor {
         }
     }
 
-    private WeaponModel createWeapon(String input, boolean isRanged)
+    private static WeaponModel createWeapon(String input, boolean isRanged)
     {
         //Pull name
         Matcher nameMatcher = nameRegex.matcher(input);

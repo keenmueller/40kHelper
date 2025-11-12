@@ -15,14 +15,9 @@ import java.util.regex.Pattern;
 
 public class ModelExtractor {
     private final static Pattern multiplesRegex = Pattern.compile("^\\d*?(?=x)");
-    private final String modelsTxt;
     private final static String MATCH_UNTIL_END_OF_LINE = " [\\S\\s]*?(?=$)";
 
-    ModelExtractor(String modelsTxt) {
-        this.modelsTxt = modelsTxt;
-    }
-
-    public void armUnits(Squad squad, List<UnitModel> unitModels, List<WeaponModel> weaponModels) {
+    public static void armUnits(String modelsTxt, Squad squad, List<UnitModel> unitModels, List<WeaponModel> weaponModels) {
         List<String> lines = modelsTxt.lines().toList();
         int i = 0;
         while (i < lines.size()) {
@@ -49,7 +44,7 @@ public class ModelExtractor {
         }
     }
 
-    private UnitModel matchUnitWithWeapons(String modelTxt, List<UnitModel> unitModels, List<WeaponModel> weaponModels) {
+    private static UnitModel matchUnitWithWeapons(String modelTxt, List<UnitModel> unitModels, List<WeaponModel> weaponModels) {
         Pair<UnitModel, String> modelWithMatchedString = findModelFromTxt(modelTxt, unitModels);
         UnitModel unitModelToAdd = modelWithMatchedString.getLeft(); //NPE is possible here. Maybe one day I'll add custom exceptions, but today is not that day
 
@@ -59,7 +54,7 @@ public class ModelExtractor {
         return unitModelToAdd;
     }
 
-    private UnitModel multiLineMatchUnitWithWeapons(String line1, String line2, String line3, List<UnitModel> unitModels, List<WeaponModel> weaponModels) {
+    private static UnitModel multiLineMatchUnitWithWeapons(String line1, String line2, String line3, List<UnitModel> unitModels, List<WeaponModel> weaponModels) {
         Pair<UnitModel, String> modelWithMatchedString = findModelFromTxt(line2, unitModels);
         UnitModel unitModelToAdd = modelWithMatchedString.getLeft(); //NPE is possible here. Maybe one day I'll add custom exceptions, but today is not that day
         String cleanedModelLine = line2.replaceAll(modelWithMatchedString.getRight() + " ?", "");
@@ -80,7 +75,7 @@ public class ModelExtractor {
         return unitModelToAdd;
     }
 
-    private Pair<UnitModel, String> findModelFromTxt(String txt, List<UnitModel> unitModels){
+    private static Pair<UnitModel, String> findModelFromTxt(String txt, List<UnitModel> unitModels){
         for (UnitModel unitModel : unitModels) {
             String unitModelName = unitModel.getName();
             //Literal Match (This only really happens with the multi-lined options)
@@ -126,7 +121,7 @@ public class ModelExtractor {
         return null;
     }
 
-    private List<WeaponModel> findWeaponsFromOptions(String options, List<WeaponModel> weaponModels){
+    private static List<WeaponModel> findWeaponsFromOptions(String options, List<WeaponModel> weaponModels){
         String[] optionList = options.split(", ");
         List<WeaponModel> weaponsToEquip = new ArrayList<>();
         for (String option : optionList) {
@@ -139,7 +134,7 @@ public class ModelExtractor {
         return weaponsToEquip;
     }
 
-    private void addMultiples(Squad squad, UnitModel unitModel, int multiple) {
+    private static void addMultiples(Squad squad, UnitModel unitModel, int multiple) {
         for (int i = 0; i < multiple; i++) {
             squad.addUnit(new Unit(unitModel));
         }

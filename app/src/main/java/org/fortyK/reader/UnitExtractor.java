@@ -10,14 +10,8 @@ import java.util.regex.Pattern;
 public class UnitExtractor {
     private final static Pattern nameRegex = Pattern.compile("^([a-zA-Z]+\\s)*");
     private final static Pattern unitStatRegex = Pattern.compile("(?<=\\D)(\\d+)(?=\\D|$)");
-    private final String unitsTxt;
 
-    public UnitExtractor(String unitsTxt)
-    {
-        this.unitsTxt = unitsTxt;
-    }
-
-    public List<UnitModel> generateUnits()
+    public static List<UnitModel> generateUnits(String unitsTxt)
     {
         List<UnitModel> unitModels = new ArrayList<>();
 
